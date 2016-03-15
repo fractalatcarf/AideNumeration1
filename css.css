@@ -1,0 +1,51 @@
+.dropzone {
+    border: #000;
+    border-style: solid;
+    border-width: 2px;
+    width: 120px;
+    height: 120px;
+    background-color: #fff;
+}
+
+.count {
+    text-align: center;
+    vertical-align: middle;
+    font-size: 800%;
+    font-family: "courier,sans-serif"
+}
+
+div#result {
+    height: 10em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(227, 222, 218)
+}
+
+div#result p {
+    margin: 0;
+    font-size: 800%;
+    font-family: "courier,sans-serif"
+}
+
+div#result img {
+    margin: 0;
+    align: right;
+    width: 40px;
+    height: 40px;
+}
+
+#draggable {
+    width: 100px;
+    height: 100px;
+    padding: 12px;
+    float: left;
+}
+
+#droppable {
+    width: 150px;
+    height: 150px;
+    padding: 20px;
+    float: left;
+    margin: 10px;
+}

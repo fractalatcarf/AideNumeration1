@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<!-- copyright 2016 Damien VINCENT -->
+<head>
+    <meta charset="utf-8">
+
+    <link href="http://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.3/css/base/jquery.ui.all.css" rel="stylesheet">
+    <link href="http://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.2/css/lightness/jquery-ui-1.10.2.custom.min.css" rel="stylesheet">
+    <link href="css.css" rel="stylesheet">
+    
+    <script src="jquery.min.js"></script>
+    <script src="jquery-ui.min.js"></script>   
+    <script src="jquery.ui.touch-punch.js"></script>
+    <meta property="og:image" content="http://soutien-scolaire-marseille-13.com/html/manuel.png">
+    <link rel="icon" href="favico.ico">
+    <title>Aide à la numération</title>
+
+</head>
+
+<body style="cursor: auto;">
+
+    <div class="container">
+
+
+       
+        <script>
+            $(function() {
+
+
+                // generate blocks
+                for (var i = 0; i < 10; i++) {
+                    $('<div class="case dropzone" style="position: absolute; "></div>').appendTo('#blocks');
+                }
+
+                // generates jeton
+                for (var i = 0; i < 10; i++) {
+                    $('<img src="anneau.png" id="draggable" class="ui-draggable" style="position: absolute;">').appendTo('#jetons');
+                }
+
+                // modify blocks
+                var left = 100;
+                var top = 300;
+                var nb = 0;
+                $('.dropzone').each(function(i, el) {
+                    $(el).css("left", left);
+                    $(el).css("top", top);
+                    left += 122;
+                    nb += 1;
+                    $(el).data("case", nb);
+                    if (nb == 5) {
+                        left = 100;
+                        top += 122;
+                    }
+                });
+
+                // modify jetons
+                var left = 100;
+                var top = 40;
+                var nb = 0;
+                $('.ui-draggable').each(function(i, el) {
+                    $(el).css("left", left);
+                    $(el).css("top", top);
+                    left = left + 101;
+                    nb += 1;
+                    if (nb == 5) {
+                        left = 100;
+                        top += 101;
+                    }
+                });
+
+                //$( "#result").center();
+
+                $(".ui-draggable").data("case", 0).draggable({
+                    snap: ".case",
+                    snapMode: "inner",
+                    scroll: false,
+                    revert: false,
+                    stop: function(event, ui) {
+                        $(this).draggable('option', 'revert', false);
+                        if ($(this).data("case") == 0) {
+                            $(this).data("lastcase", 0)
+                        }
+                        // count how many
+                        var count = 0;
+                        $('.dropzone').each(function(i, el) {
+                            count += $(el).data("drop");
+                            $('#result').find("p")[0].textContent = count;
+                        });
+
+                    }
+                });
+
+                $(".dropzone").data("drop", 0).droppable({
+                    tolerance: 'fit',
+                    drop: function(event, ui) {
+                        var already = $(this).data("drop");
+                        if (already == 1) {
+                            ui.draggable.draggable('option', 'revert', true);
+                            // revert situation
+                            var previous = ui.draggable.data("lastcase");
+                            if (previous > 0) {
+                                var drop = $(".dropzone")[previous - 1];
+                                $(drop).data("drop", 1);
+                                ui.draggable.data("case", previous);
+                            }
+
+                        } else {
+                            //$( this )
+                            //.addClass( "ui-state-highlight" );
+                            $(this).data("drop", 1);
+                            ui.draggable.data("case", $(this).data("case"));
+                            ui.draggable.data("lastcase", $(this).data("case"));
+                        }
+                        //alert ($.ui.snapMode)
+                    },
+                    out: function(event, ui) {
+                        var caseDrag = ui.draggable.data("case");
+                        var caseCase = $(this).data("case");
+                        if (caseCase == caseDrag) {
+                            $(this).data("drop", 0);
+                            ui.draggable.data("case", 0);
+                            //$( this )
+                            //  .removeClass( "ui-state-highlight" );
+                        }
+                        ui.draggable.draggable('option', 'revert', false)
+                    }
+
+                });
+
+                $("#tiroir").draggable({
+                    axis: "x",
+                    containment: "#tiroir-parent",
+                    scroll: false
+                });
+
+            });
+        </script>
+
+
+
+        <div class="demo">
+
+
+            <div id="blocks" style="position: absolute;">
+                <div id="tiroir-parent" style="padding: 0px;margin: 0px 0px 0px 0px;position: absolute; left: 305px; top:302px; width:645px; height:244px;">
+                    <div id="tiroir" style="padding: 0px;margin: 0px 0px 0px 0px;position: absolute; left: 1px; top:1px;width:480px; height:240px">
+                        <div id="result" style="padding: 0px;position: absolute; left: 244px;  width:180px; height:240px">
+                            <p id="count">0</p>
+                        </div>
+                        <div id="result" style="padding: 0px;position: absolute; left: 404px;  width:40px; height:240px"><img src="handle.png"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="jetons"></div>
+
+
+
+        </div>
+        <!-- End demo -->
+
+
+
+    </div>
+
+
+    <script>
+        (function(i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function() {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-4300137-5', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+
+</body>
+
+</html>
+
+<!DOCTYPE>
